@@ -1,0 +1,22 @@
++--------+          +--------+          +-------+
+|  User  |          | Driver |          | Ride  |
++--------+          +--------+          +-------+
+| UserID |◇----1   |DriverID|◇----1   |RideID |
+| Name   |          | Name   |          | ...   |
+| Email  |          | Email  |          | ...   |
+| Phone  |          | ...    |          | ...   |
+| ...    |          +--------+          +-------+
++--------+           /       \
+   |               /         \
+   |              /           \
+   |          +-------+     +---------+
+   +----------|Payment|     | Rating  |
+              +-------+     +---------+
+              |PaymentID|   |RatingID |
+              |RideID   |   |RideID   |
+              |Amount   |   |UserID   |
+              |...      |   |DriverID |
+              +---------+   |RatingValue|
+                           |Comment  |
+                           |Date     |
+                           +---------+
