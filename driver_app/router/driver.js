@@ -1,10 +1,10 @@
 const express = require('express')
 const textflow = require('textflow.js')
 
-const { User } = require('../../models/driver')
+const { Driver } = require('../../models/driver/driver')
 
 
-class UserRoutes {
+class DriverRoutes {
     constructor() {
         this.router = express.Router()
 
@@ -12,8 +12,21 @@ class UserRoutes {
     }
     
     setupRoutes() {
+        this.router.get('/:id', this.getDriver)
         this.router.put('/:id/phone', this.addNumber)
 
+    }
+
+    async getDriver (req, res, next) {
+        try {
+        const driver = await Driver.findById(req.params.id)
+
+        if (!driver) throw 'NotFound'
+
+        return res.send(driver)
+        } catch (error) {
+            next(error)
+        }
     }
 
     async addNumber (req, res, next) {
@@ -64,4 +77,4 @@ class UserRoutes {
 
 }
 
-module.exports = new UserRoutes()
+module.exports = new DriverRoutes()

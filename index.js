@@ -1,8 +1,9 @@
-const express  = require('express')
-const mongoose = require('mongoose')
-const morgan   = require('morgan')
-const cors     = require('cors')
-const http     = require('http')
+const express    = require('express')
+const mongoose   = require('mongoose')
+const morgan     = require('morgan')
+const cors       = require('cors')
+const http       = require('http')
+const bodyParser = require('body-parser')
 const WebSocket       = require('ws')
 
 const middleware = require('./middleware')
@@ -20,6 +21,7 @@ const baseURL = process.env.URL_BASE
 
 const Driver = require('./driver_app/router')
 
+// app.use(bodyParser.json({ limit: '5mb' }))
 app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors())
@@ -28,7 +30,11 @@ app.use(middleware.authHandle())
 app.use('*', cors())
 
 app.use(`${baseURL}/driver/auth`, Driver.AuthRoutes.router)
-app.use(`${baseURL}/driver/user`, Driver.UserRoutes.router)
+app.use(`${baseURL}/driver/`, Driver.DriverRoutes.router)
+app.use(`${baseURL}/driver/profile`, Driver.ProfileRoutes.router)
+app.use(`${baseURL}/driver/rating`, Driver.RatingRoutes.router)
+
+// app.use(`${baseURL}/driver/user`, Driver.UserRoutes.router)
 
 app.use(middleware.errorHandle)
 

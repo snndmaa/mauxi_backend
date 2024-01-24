@@ -46,6 +46,10 @@ const driverSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    dateJoined: {
+        type: Date,
+        default: Date.now,
+    }
 })
 
 driverSchema.virtual('id').get(function (){

@@ -3,7 +3,7 @@ const bcrypt   = require('bcrypt')
 const textflow = require('textflow.js')
 const jwt      = require('jsonwebtoken')
 
-const { Driver } = require('../../models/driver')
+const { Driver } = require('../../models/driver/driver')
 
 
 class AuthRoutes {

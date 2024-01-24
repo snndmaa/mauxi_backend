@@ -42,6 +42,11 @@ const errorHandle = (error, req, res, next) => {
         status  = 'fail'
         code    = 404
         message = 'Resource does not exist'
+    } else if (error === 'UpdateFail' ) {
+        title   = 'Failed to update resource'
+        status  = 'fail',
+        code    = 304,
+        message = 'update failure'
     }
 
     const errorResponse = {

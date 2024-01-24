@@ -3,36 +3,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebSocket Example</title>
+  <title>Example</title>
 </head>
 <body>
-
+  <form enctype="multipart/form-data">
+    <input id="picture" type="file" placeholder="Image">
+    <input id="carModel" type="text" placeholder="Car Model">
+    <input id="licensePlate" type="text" placeholder="License plate">
+    <button id="button">Submit</button>
+  </form>
 <script>
-  // Replace 'ws://localhost:3000' with the actual WebSocket server URL
-  const socket = new WebSocket('ws://localhost:5000/v1/user');
+  const reader = new FileReader()
+  
+  button.onclick = async (e) => {
+    const picture = document.getElementById('picture')
+    const carModel = document.getElementById('carModel').value
+    const licensePlate = document.getElementById('licensePlate').value
+    const button = document.getElementById('button')
 
-  // Connection opened
-  socket.addEventListener('open', (event) => {
-    console.log('WebSocket connection opened:', event);
+    e.preventDefault()
+    
+    const formData = new FormData()
+    formData.append('driver', '659442d2a1985fda68aa616c')
+    formData.append('picture', picture.files[0])
+    formData.append('carModel', carModel)
+    formData.append('licensePlate', licensePlate)
 
-    // Send a message to the server
-    // socket.send('Hello, Server!');
-  });
-
-  // Listen for messages from the server
-  socket.addEventListener('message', (event) => {
-    console.log('Message from server:', event.data);
-  });
-
-  // Connection closed
-  socket.addEventListener('close', (event) => {
-    console.log('WebSocket connection closed:', event);
-  });
-
-  // Connection error
-  socket.addEventListener('error', (event) => {
-    console.error('WebSocket connection error:', event);
-  });
+    let response = await fetch('http://127.0.0.1:5000/v1/driver/profile/', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkcml2ZXJJRCI6IjY1YTBmYjMyZDlkZjcyZjJkN2IwNTBlZiIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MDUwNDg4ODd9.kq3Yv1NYgUwblor4iFOP7WcVG90FoYk-izVlD_2iWhE'
+      },
+      body: formData
+      // body: JSON.stringify({
+      //   driver: '659442d2a1985fda68aa616c',
+      //   picture: picture.files[0],
+      //   carModel,
+      //   licensePlate
+      // })
+    })
+    
+    // console.log(picture.files[0])
+    console.log(response)
+  }
 </script>
 
 </body>

@@ -19,6 +19,10 @@ const rideSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    distance: {
+        type: Number,
+        required: false,
+    },
     price: {
         type: Number,
         required: true,
@@ -28,3 +32,13 @@ const rideSchema = new mongoose.Schema({
         default: Date.now,
     }
 })
+
+rideSchema.virtual('id').get(function (){
+    return this._id.toHexString()
+})
+
+rideSchema.set('toJSON', {
+    virtuals: true
+})
+
+exports.Ride = mongoode.model('RideRating', rideSchema)
