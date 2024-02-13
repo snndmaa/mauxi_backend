@@ -3,7 +3,7 @@ const bcrypt   = require('bcrypt')
 const textflow = require('textflow.js')
 const jwt      = require('jsonwebtoken')
 
-const { Driver } = require('../../models/driver/driver')
+const { User } = require('../../models/user/user')
 
 
 class AuthRoutes {
@@ -22,26 +22,30 @@ class AuthRoutes {
     
     async register (req, res, next) {
         try {
-            let driver = new Driver({
+            const { firstName, lastName, email, phoneNumber, password } = req.body
+            if (!(firstName, lastName, email && password && phoneNumber)) throw {name: 'MissingFields'}
+            
+            // if (await User.find({email})) {
+            //     throw 'DuplicateError'
+            // }
+            let user = new User({
                 firstName,
                 lastName,
                 email,
                 phoneNumber,
-                password: bcrypt.hashSync(req.body.password, 10),
-            })
-            
-            driver = await driver.save()
+                password: bcrypt.hashSync(req.body.password, 10),})        
+            user = await user.save()
             
             return res.send({
-                driver,
+                user,
                 status: 'success'
             })
         }
         catch (error) {
 
-            if (error.name === 'MongoServerError') {
-                throw 'DuplicateError'
-            }
+            // if (error.name === 'MongoServerError') {
+            //     throw 'DuplicateError'
+            // }
             next(error)
         }
     }
@@ -57,7 +61,6 @@ class AuthRoutes {
             }
 
             const response = await textflow.sendVerificationSMS(phoneNumber, verificationOptions)
-            
             if (response.ok) res.send({status: 'success'})
             else throw 'SMSFail'
         }
@@ -100,40 +103,40 @@ class AuthRoutes {
             const { phoneNumber, email, password } = req.body
 
             if (phoneNumber) {
-            const driver    = await Driver.findOne({phoneNumber})
+            const user    = await User.findOne({phoneNumber})
             
                 if (!user) {
                     throw 'NotFound'
-                } else if(bcrypt.compareSync(req.body.password, driver.password)){
+                } else if(bcrypt.compareSync(req.body.password, user.password)){
                     const token = jwt.sign(
                         {
-                            DriverID: driver.id,
+                            userID: user.id,
                             isAdmin: user.isAdmin
                         },
                         secret
                     )
 
-                    res.send({driver: driver.email, token: token})
+                    res.send({user: user.email, token: token})
                 }
                 else{
                     throw 'ValidationError'
              }
 
             } else if (email) {
-                const driver    = await Driver.findOne({email: email})
-            
-                if (!driver) {
+                const user    = await User.findOne({email: email})
+                
+                if (!user) {    
                     throw 'NotFound'
-                } else if(bcrypt.compareSync(req.body.password, driver.password)){
+                } else if(bcrypt.compareSync(req.body.password, user.password)){
                     const token = jwt.sign(
                         {
-                            driverID: driver.id,
-                            isAdmin: driver.isAdmin
+                            userID: user.id,
+                            isAdmin: user.isAdmin
                         },
                         secret
                     )
 
-                    res.send({driver: driver.id, token: token})
+                    res.send({user: user.id, token: token})
                 }
                 else{
                     throw 'ValidationError'

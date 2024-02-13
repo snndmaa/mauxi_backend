@@ -20,6 +20,7 @@ const dbString = process.env.DB_STRING
 const baseURL = process.env.URL_BASE
 
 const Driver = require('./driver_app/router')
+const User = require('./user_app/router')
 
 // app.use(bodyParser.json({ limit: '5mb' }))
 app.use(express.json())
@@ -33,8 +34,9 @@ app.use(`${baseURL}/driver/auth`, Driver.AuthRoutes.router)
 app.use(`${baseURL}/driver/`, Driver.DriverRoutes.router)
 app.use(`${baseURL}/driver/profile`, Driver.ProfileRoutes.router)
 app.use(`${baseURL}/driver/rating`, Driver.RatingRoutes.router)
+app.use(`${baseURL}/driver/ride`, Driver.RideRoutes.router)
 
-// app.use(`${baseURL}/driver/user`, Driver.UserRoutes.router)
+app.use(`${baseURL}/user/auth`, User.AuthRoutes.router)
 
 app.use(middleware.errorHandle)
 
@@ -60,16 +62,16 @@ server.on('upgrade', (request, socket, head) => {
 
 userWss.on('connection', (ws) => {
   ws.on('message', (message) => {
-
     const data = JSON.parse(message)
-
-    if (data.type === 'location') {
+    if (data.type === 'location' || data.type === 'request') {
       userWss.clients.forEach((client) => {
         if (client !== ws && client.readyState === WebSocket.OPEN) {
           client.send(JSON.stringify(data));
         }
       })
     }
+
+    
 
   })
   // ws.send(JSON.stringify({message: 'Connected!'}));

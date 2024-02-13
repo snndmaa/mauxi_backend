@@ -41,4 +41,4 @@ rideSchema.set('toJSON', {
     virtuals: true
 })
 
-exports.Ride = mongoode.model('RideRating', rideSchema)
+exports.Ride = mongoose.model('RideRating', rideSchema)

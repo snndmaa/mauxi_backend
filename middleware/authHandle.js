@@ -17,6 +17,10 @@ const authHandle = () => {
             `${URLBase}/driver/auth/login`,
             new RegExp(`${URLBase}/driver//auth/verify`),
             new RegExp(`${URLBase}/users/[a-zA-Z0-9]+/phone`),
+            `${URLBase}/user/auth/register`,
+            `${URLBase}/user/auth/login`,
+            `${URLBase}/user/auth/sms`,
+            `${URLBase}/user/auth/verify`,
         ]
     })
 }
